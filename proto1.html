@@ -1,0 +1,61 @@
+<html>
+<head>
+	<title>Raphaels Graphics</title>
+	<script type="text/javascript" src="raphael-min.js"></script>
+	<script type="text/javascript">	
+		var data =
+			{
+				"value": "1500",
+				"branches": [
+					{
+						"value": "1000",
+						"branches": [
+							{
+								"value": "400"
+							},
+							{
+								"value": "600"
+							}
+						]
+					},
+					{
+						"value": "500"
+					}
+				]
+			}
+		Raphael.fn.bubble = function(cx,cy,r){
+			if(isNaN(r))
+				return;
+			alert(cx+","+cy+" "+r);
+			this.circle(cx,cy,r).attr("fill", "#f58").attr("stroke", "#aaa");
+			this.text(cx,cy,r*10);
+		}
+		Raphael.fn.stLine = function(fromX,fromY,toX,toY){
+			return this.path("M"+fromX+" "+fromY+"L"+toX+" "+toY).attr("stroke-width", "4").attr("stroke", "#aaa").toBack();
+		}
+		window.onload = function () {
+			var paper = Raphael("holder", 1366, 768);
+			paper.bubble(683,384,data.value/10);
+			function traverse(data) {
+			    for (i in data) {
+			        if (data[i]!=null && typeof(data[i])=="object") {
+			            console.log(i, data[i]);
+			            if(!isNaN(data[i].value))
+			            {
+			            	var px = Math.round(Math.random()*1300);
+				            var py = Math.round(Math.random()*750);
+				            paper.bubble(px,py,data[i].value/10);
+				            paper.stLine(683,384,px,py);
+			            }  
+			            traverse(data[i]);
+			        }
+			    }
+			}      
+			traverse(data);
+		}
+	</script>
+</head>
+<body>
+	<div id="holder"></div>
+</body>
+</html>
