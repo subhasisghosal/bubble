@@ -1,0 +1,92 @@
+<html>
+<head>
+	<title>Raphaels Graphics</title>
+	<script type="text/javascript" src="raphael-min.js"></script>
+	<script type="text/javascript">	
+		var paper;
+		var data =
+			{
+				"value": "1500",
+				"branches": [
+					{
+						"value": "1000",
+						"branches": [
+							{
+								"value": "400"
+							},
+							{
+								"value": "500",
+								"branches": [
+									{
+										"value": "300"
+									},
+									{
+										"value": "200"
+									}
+								]
+							},
+							{
+								"value": "100"
+							}
+						]
+					},
+					{
+						"value": "500"
+					}
+				]
+			};
+
+		window.onload = function () {
+			paper = Raphael("holder", 1366, 768);
+			draw();
+		}
+
+		function bubble(cx,cy,r){
+			if(isNaN(r))
+				return;
+			paper.circle(cx,cy,r).attr("fill", "#58f").attr("stroke", "#aaa");
+			paper.text(cx,cy,r*10);
+		}
+
+		function stLine(fromX,fromY,toX,toY){
+			return paper.path("M"+fromX+" "+fromY+"L"+toX+" "+toY).attr("stroke-width", "4").attr("stroke", "#aaa").toBack();
+		}
+		
+		function draw(){			
+			var px, py, pt = [], cur = [];
+
+			function traverse(data, key, ob) {
+			    for (i in data) {
+			        if (data[i]!==null && typeof(data[i])==="object") {
+			            console.log(i, data[i],key);
+				    	pt.push({x:px, y:py, level:key});
+			            traverse(data[i], key, pt);
+			        }
+			        else
+			        {
+		            	px = Math.round(Math.random()*1200);
+			            py = Math.round(Math.random()*600);
+			            var point=pt.pop();
+			            console.log(point, px, py, key);
+			            bubble(px,py,data.value/10);
+			            cur.push({x:px, y:py, level:++key});
+			        }  
+			    }
+			    return ++key;
+			}; 
+
+			traverse(data,0);
+
+			for (var i = 0; i < pt.length; i++) {
+				for (var j = 0; j < cur.length; j++) {
+					if(cur[j].level===pt[i].level+1)
+						stLine(pt[i].x, pt[i].y, cur[j].x, cur[j].y);
+				};
+			};
+		}
+	</script>
+</head>
+<body>
+	<div id="holder"></div>
+</body>
+</html>
