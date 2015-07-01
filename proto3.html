@@ -58,7 +58,6 @@
 			function traverse(data, key, ob) {
 			    for (i in data) {
 			        if (data[i]!==null && typeof(data[i])==="object") {
-			            console.log(i, data[i],key);
 				    	pt.push({x:px, y:py, level:key});
 			            traverse(data[i], key, pt);
 			        }
@@ -67,7 +66,6 @@
 		            	px = Math.round(Math.random()*1200);
 			            py = Math.round(Math.random()*600);
 			            var point=pt.pop();
-			            console.log(point, px, py, key);
 			            bubble(px,py,data.value/10);
 			            cur.push({x:px, y:py, level:++key});
 			        }  
